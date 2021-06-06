@@ -5,6 +5,7 @@ import EventContent from "../../components/event-detail/event-content";
 import {getAllEvents, getEventById, getFeaturedEvents} from "../../helpers/api-util";
 import Head from "next/head";
 import Comments from "../../components/input/comments";
+import {connectDatabase, insertDocument} from "../../../helpers/db-util";
 
 function EventDetailPage(props) {
   const event = props.selectedEvent;

@@ -1,10 +1,16 @@
 import { MongoClient } from 'mongodb';
+import {connectDatabase, getAllDocuments, insertDocument} from "../../../helpers/db-util";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
 
-  const client = await MongoClient.connect('mongodb+srv://nhat:nhat@cluster0.8h2u5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
-  const db = client.db();
+  let client;
+  try {
+    client = await connectDatabase();
+  } catch (error) {
+    res.status(500).json({ message: 'connecting to the database fail' });
+    return;
+  }
 
 
 
@@ -27,14 +33,28 @@ async function handler(req, res) {
 
     console.log(newComment);
 
-    const result = await db.collection('comments').insertOne(newComment);
-    newComment.id = result.insertedId;
+    let result;
+
+    try {
+      result = await insertDocument(client, 'commnets', newComment);
+      newComment._id = result.insertedId;
+    } catch (error) {
+      res.status(500).json({message: 'Inserting comment fail'});
+      return;
+    }
+
 
     res.status(201).json({message: 'Added comment', comment: newComment});
   }
 
   if (req.method === 'GET') {
-    const documents = await db.collection('comments').find().sort({_id: -1}).toArray();
+    let documents;
+    try {
+      documents = await getAllDocuments(client, 'comments', {_id: -1});
+    } catch (error) {
+      res.status(500).json({message: 'Getting data fail'});
+      return;
+    }
     res.status(200).json({comments: documents});
   }
   client.close();
