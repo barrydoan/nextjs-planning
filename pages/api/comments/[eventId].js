@@ -25,10 +25,11 @@ function handler(req, res) {
 
   if (req.method === 'GET ') {
     const dummyList = [
-      {id: 'c1', name: 'Max', email: 'test@test', comment: 'Comment 1'},
-      {id: 'c2', name: 'Ny', email: 'test@test', comment: 'Comment 2'},
-      {id: 'c3', name: 'Kat', email: 'test@test', comment: 'Comment 3'},
+      {id: 'e1', name: 'Max', email: 'test@test', comment: 'Comment 1'},
+      {id: 'e2', name: 'Ny', email: 'test@test', comment: 'Comment 2'},
+      {id: 'e3', name: 'Kat', email: 'test@test', comment: 'Comment 3'},
     ];
+    console.log('begin show response')
     res.status(200).json({comments: dummyList});
   }
 }
